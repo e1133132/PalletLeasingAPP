@@ -1,0 +1,13 @@
+{
+  "name": "LHTPalletLeasing",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "proxies": [
+    {
+      "path": "/lht",
+      "proxyUrl": "http://localhost/LHPWebApi/"
+    }
+  ]
+}
