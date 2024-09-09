@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IonicPageModule } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { IssueNoteCreatePage } from './issue-note-create';
 
 @NgModule({
@@ -7,7 +7,7 @@ import { IssueNoteCreatePage } from './issue-note-create';
     IssueNoteCreatePage,
   ],
   imports: [
-    IonicPageModule.forChild(IssueNoteCreatePage),
+    IonicModule,
   ],
 })
 export class IssueNoteCreatePageModule {}

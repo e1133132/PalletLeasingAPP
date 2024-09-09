@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {HireOrderProvider} from "../../../HireOrderModule/providers/hire-order/hire-order";
-import {ViewController} from "ionic-angular";
+import {ModalController} from "@ionic/angular";
 
 /**
  * Generated class for the PopoverNewHireOrdersComponent component.
@@ -17,7 +17,7 @@ export class PopoverNewHireOrdersComponent {
   newHireOrders;
 
   constructor(private hireOrderProvider: HireOrderProvider,
-              private viewCtrl: ViewController) {
+              private modalCtrl: ModalController) {
     console.log('Hello PopoverNewHireOrdersComponent Component');
 
     this.hireOrderProvider.getReleasedAndPartiallyCompleteHireOrders().then(data=> {
@@ -27,10 +27,10 @@ export class PopoverNewHireOrdersComponent {
 
   sendHireOrderAndClose(hireOrder) {
     if(hireOrder) {
-      this.viewCtrl.dismiss(hireOrder);
+      this.modalCtrl.dismiss(hireOrder);
     }
     else {
-      this.viewCtrl.dismiss();
+      this.modalCtrl.dismiss();
     }
   }
 

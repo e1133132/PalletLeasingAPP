@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AlertController, NavParams, ViewController} from "@ionic/angular";
+import {AlertController, NavParams, ModalController} from "@ionic/angular";
 import {IssueNoteProvider} from "../../providers/issue-note/issue-note";
 import {ApiURL} from "../../../../shared/ApiURL";
 
@@ -17,7 +17,7 @@ export class IssueNoteContextMenuHomeComponent {
 
   issueNote;
   constructor(public navParams: NavParams,
-              public viewCtrl: ViewController,
+              public modalCtrl: ModalController,
               private issueNoteProvider: IssueNoteProvider,
               public alertCtrl: AlertController,
               private api: ApiURL) {
@@ -27,44 +27,41 @@ export class IssueNoteContextMenuHomeComponent {
 
   }
 
-  deleteIssueNote() {
-
-    let confirmAlert = this.alertCtrl.create({
-      title:"Confirm Removal of Issue Note",
+  async deleteIssueNote() {
+    const confirmAlert = await this.alertCtrl.create({
+      header:"Confirm Removal of Issue Note",
       message: "Are you sure? This action cannot be undone.",
       buttons: [{
         text: "Yes",
         role: "cancel",
-        handler: ()=> {
+        handler: async () => {
           if(this.issueNote.Status=="New") {
-            this.issueNoteProvider.deleteIssueNote(this.issueNote.Issue_Note_ID).then (result => {
+            await this.issueNoteProvider.deleteIssueNote(this.issueNote.Issue_Note_ID).then(result => {
               console.log(result);
             });
-            let alert = this.alertCtrl.create({
-              title: "Success!",
+            const alert = await this.alertCtrl.create({
+              header: "Success!",
               message: "Issue Note has been removed.",
               buttons: [{
                 text: "OK",
                 role:"cancel",
-                handler: ()=> {
-                }
+                handler: ()=> {}
               }]
             });
-            alert.present();
-            this.viewCtrl.dismiss();
+            await alert.present();
+            this.modalCtrl.dismiss();
           }
           else {
-            let alert = this.alertCtrl.create({
-              title: "Failed!",
-              message: "Issue Note cannot be removed. Please ensure you are removing a new Issue Note ",
+            const alert = await this.alertCtrl.create({
+              header: "Failed!",
+              message: "Issue Note cannot be removed. Please ensure you are removing a new Issue Note.",
               buttons: [{
                 text: "OK",
                 role:"cancel",
-                handler: ()=> {
-                }
+                handler: ()=> {}
               }]
             });
-            alert.present();
+            await alert.present();
           }
         }
       }, {
@@ -74,8 +71,9 @@ export class IssueNoteContextMenuHomeComponent {
       }]
     });
 
-    confirmAlert.present();
-  }
+    await confirmAlert.present();
+}
+
 
   generatePDFOfIssueNote() {
     this.issueNoteProvider.getPDFOfIssueNote(this.issueNote).then(data => {
@@ -114,55 +112,55 @@ export class IssueNoteContextMenuHomeComponent {
 
   }
 
-  setIssueNoteToIssued() {
-    this.issueNoteProvider.setIssueNoteStatusFromNewToIssued(this.issueNote.Issue_Note_ID).then(result => {
-      let alert = this.alertCtrl.create({
-        title: "Success",
+  async setIssueNoteToIssued() {
+    await this.issueNoteProvider.setIssueNoteStatusFromNewToIssued(this.issueNote.Issue_Note_ID).then(async result => {
+      const alert = await this.alertCtrl.create({
+        header: "Success",
         message: "This Issue Note Status has been set to Issued",
         buttons: [{
           text: "OK",
           role: "cancel",
-          handler: ()=> {
-            this.viewCtrl.dismiss();
+          handler: () => {
+            this.modalCtrl.dismiss();
           }
         }]
       });
-      alert.present();
+      await alert.present();
     });
-  }
+}
 
-  setIssueNoteToCompleted() {
-    this.issueNoteProvider.setIssueNoteStatusFromIssuedToCompleted(this.issueNote.Issue_Note_ID).then(result=> {
+async setIssueNoteToCompleted() {
+    await this.issueNoteProvider.setIssueNoteStatusFromIssuedToCompleted(this.issueNote.Issue_Note_ID).then(async result => {
       console.log(result);
-      if (result=="HOCompleted") {
-        let alert = this.alertCtrl.create({
-          title: "Acknowledgement Success",
+      if (result === "HOCompleted") {
+        const alert = await this.alertCtrl.create({
+          header: "Acknowledgement Success",
           message: "This Issue Note Status has been completed. The Hire Order has also been completed.",
           buttons: [{
             text: "OK",
             role: "cancel",
-            handler: ()=> {
-              this.viewCtrl.dismiss();
+            handler: () => {
+              this.modalCtrl.dismiss();
             }
           }]
         });
-        alert.present();
-      }
-      else {
-        let alert = this.alertCtrl.create({
-          title: "Acknowledgement Success",
+        await alert.present();
+      } else {
+        const alert = await this.alertCtrl.create({
+          header: "Acknowledgement Success",
           message: "This Issue Note Status has been completed.",
           buttons: [{
             text: "OK",
             role: "cancel",
-            handler: ()=> {
-              this.viewCtrl.dismiss();
+            handler: () => {
+              this.modalCtrl.dismiss();
             }
           }]
         });
-        alert.present();
+        await alert.present();
       }
     });
-  }
+}
+
 
 }
