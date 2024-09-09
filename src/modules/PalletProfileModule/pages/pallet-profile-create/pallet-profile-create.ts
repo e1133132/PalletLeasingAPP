@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams} from '@ionic/angular';
-import {Api} from "@ionic/pro/dist/src/api";
+import {AlertController, NavController, NavParams} from '@ionic/angular';
+
 import {ApiURL} from "../../../../shared/ApiURL";
 import {PalletProfileProvider} from "../../providers/pallet-profile/pallet-profile";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -12,7 +12,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-pallet-profile-create',
   templateUrl: 'pallet-profile-create.html',
@@ -47,21 +47,21 @@ export class PalletProfileCreatePage {
   }
 
   createPalletProfile(formData) {
-    this.palletProfileProvider.postCreatePalletProfile(formData).then( result=> {
-      console.log("CreatePalletProfileResult: "+result.toString());
+    this.palletProfileProvider.postCreatePalletProfile(formData).then(result => {
+      console.log("CreatePalletProfileResult: " + result.toString());
     });
-    let alert = this.alertCtrl.create({
-      title: "Success",
+
+    this.alertCtrl.create({
+      header: "Success",
       message: "Pallet Profile successfully created.",
       buttons: [{
         text: "OK",
         role: "cancel",
-        handler: ()=> {
+        handler: () => {
           this.navCtrl.pop();
         }
       }]
-    });
-    alert.present();
+    }).then(alert => alert.present());
   }
 
 }

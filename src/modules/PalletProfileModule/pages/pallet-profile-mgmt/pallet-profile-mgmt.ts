@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams, Platform} from '@ionic/angular';
+import {AlertController, NavController, NavParams, Platform} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {PalletProfileProvider} from "../../providers/pallet-profile/pallet-profile";
 import {MovementHistoryProvider} from "../../providers/movement-history/movement-history";
@@ -18,7 +18,6 @@ import {AdvanceProductionProvider} from "../../../../providers/advance-productio
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-pallet-profile-mgmt',
   templateUrl: 'pallet-profile-mgmt.html',
@@ -119,20 +118,19 @@ export class PalletProfileMgmtPage {
   }
 
   editPalletProfile(formData) {
-    this.palletProfileProvider.patchEditPalletProfile(formData).then(result=>{
-      console.log("editPalletProfile: "+result);
+    this.palletProfileProvider.patchEditPalletProfile(formData).then(result => {
+      console.log("editPalletProfile: " + result);
     });
 
-    let alert = this.alertCtrl.create({
-      title: "Success!",
+    this.alertCtrl.create({
+      header: "Success!",
       message: "Changes have been saved.",
       buttons: [{
         text: "OK",
-        role:"cancel",
-        handler: ()=> {}
+        role: "cancel",
+        handler: () => {}
       }]
-    });
-    alert.present();
+    }).then(alert => alert.present());
   }
 
   loadOrderArrangeMovementHistoryData(event?) {

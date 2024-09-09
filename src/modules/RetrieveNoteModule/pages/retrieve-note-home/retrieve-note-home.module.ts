@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IonicPageModule } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { RetrieveNoteHomePage } from './retrieve-note-home';
 import {ComponentsModule} from "../../../../shared/components/components.module";
 
@@ -8,7 +8,7 @@ import {ComponentsModule} from "../../../../shared/components/components.module"
     RetrieveNoteHomePage,
   ],
   imports: [
-    IonicPageModule.forChild(RetrieveNoteHomePage),
+    IonicModule,
     ComponentsModule
   ],
 })

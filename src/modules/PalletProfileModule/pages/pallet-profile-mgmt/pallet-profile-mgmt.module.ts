@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
-import { IonicPageModule } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { PalletProfileMgmtPage } from './pallet-profile-mgmt';
-import {ComponentsModule} from "../../../../shared/components/components.module";
+import { ComponentsModule } from "../../../../shared/components/components.module";
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     PalletProfileMgmtPage,
   ],
   imports: [
-    IonicPageModule.forChild(PalletProfileMgmtPage),
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     ComponentsModule
   ],
 })

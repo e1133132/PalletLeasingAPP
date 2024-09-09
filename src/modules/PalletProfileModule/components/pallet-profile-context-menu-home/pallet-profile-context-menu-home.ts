@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {AlertController, NavParams, ViewController} from "@ionic/angular";
+import {AlertController, NavParams} from "@ionic/angular";
 import {PalletProfileProvider} from "../../providers/pallet-profile/pallet-profile";
-
+import { PopoverController } from "@ionic/angular";
 /**
  * Generated class for the PalletProfileContextMenuHomeComponent component.
  *
@@ -16,48 +16,45 @@ export class PalletProfileContextMenuHomeComponent {
 
   palletProfile;
 
-  constructor(public navParams: NavParams,
-              private viewCtrl: ViewController,
-              private palletProfileProvider: PalletProfileProvider,
-              private alertCtrl: AlertController,) {
+  constructor(
+    public navParams: NavParams,
+    private popoverController: PopoverController,
+    private palletProfileProvider: PalletProfileProvider,
+    private alertCtrl: AlertController,
+  ) {
     console.log('Hello PalletProfileContextMenuHomeComponent Component');
-
-      this.palletProfile = this.navParams.get("palletProfile");
+    this.palletProfile = this.navParams.data.palletProfile;
   }
 
-  deletePalletProfile() {
-
-    let alert = this.alertCtrl.create({
-      title: "Confirmation of Removal",
+  async deletePalletProfile() {
+    const alert = await this.alertCtrl.create({
+      header: "Confirmation of Removal",
       message: "Are you sure? This action cannot be undone.",
       buttons: [{
         text: "Yes",
         role: "cancel",
-        handler: ()=> {
-          this.palletProfileProvider.deletePalletProfile(this.palletProfile.Pallet_Profile_ID).then(result=> {
-
-          });
-          let successAlert = this.alertCtrl.create({
-            title: "Success!",
+        handler: async () => {
+          await this.palletProfileProvider.deletePalletProfile(this.palletProfile.Pallet_Profile_ID);
+          const successAlert = await this.alertCtrl.create({
+            header: "Success!",
             message: "Pallet Profile has been removed.",
-            buttons: [{text: "OK", role:"cancel", handler: ()=>{ this.viewCtrl.dismiss();}}]
+            buttons: [{text: "OK", role: "cancel", handler: () => { this.popoverController.dismiss(); }}]
           });
-          successAlert.present();
+          await successAlert.present();
         }
-      },{
-        text:"No",
-        role: "cancel",
-        handler: ()=>{}
+      }, {
+        text: "No",
+        role: "cancel"
       }]
     });
-    alert.present();
+    await alert.present();
   }
 
-  replenishStock() {
-    let getAmtAlert = this.alertCtrl.create({
-      title: "Add Stock",
-      message: "Please indicate number of stock to add to "+this.palletProfile.Pallet_Type+".",
-      inputs:[{
+  async replenishStock() {
+    const getAmtAlert = await this.alertCtrl.create({
+      header: "Add Stock",
+      message: "Please indicate number of stock to add to " + this.palletProfile.Pallet_Type + ".",
+      inputs: [{
         name: "input",
         placeholder: "Number",
         type: "number"
@@ -65,32 +62,27 @@ export class PalletProfileContextMenuHomeComponent {
       buttons: [{
         text: "OK",
         role: "cancel",
-        handler: (data => {
-
-          this.palletProfileProvider.addToStock(this.palletProfile.Pallet_Profile_ID,data.input).then(result =>{
-            let successAlert = this.alertCtrl.create({
-              title: "Success",
-              message: "Stock has been added. The current stock is now "+result,
-              buttons: [{
-                text: "OK",
-                role: "cancel",
-                handler: () => {
-                  this.viewCtrl.dismiss();
-                }
-              }]
-            });
-            successAlert.present();
+        handler: async (data) => {
+          const result = await this.palletProfileProvider.addToStock(this.palletProfile.Pallet_Profile_ID, data.input);
+          const successAlert = await this.alertCtrl.create({
+            header: "Success",
+            message: "Stock has been added. The current stock is now " + result,
+            buttons: [{
+              text: "OK",
+              role: "cancel",
+              handler: () => {
+                this.popoverController.dismiss();
+              }
+            }]
           });
-
-
-        })
+          await successAlert.present();
+        }
       }, {
-        text:"Cancel",
-        role: "cancel",
-        handler: ()=> {}
+        text: "Cancel",
+        role: "cancel"
       }]
     });
-    getAmtAlert.present();
+    await getAmtAlert.present();
   }
 
 }

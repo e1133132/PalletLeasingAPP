@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {
-  IonicPage, LoadingController, ModalController, NavController, NavParams, Platform,
+  LoadingController, ModalController, NavController, NavParams, Platform,
   PopoverController
 } from '@ionic/angular';
 import {RetrieveNoteProvider} from "../../providers/retrieve-note/retrieve-note";
@@ -18,7 +18,7 @@ import {SettingsProvider} from "../../../../providers/settings/settings";
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-retrieve-note-home',
   templateUrl: 'retrieve-note-home.html',
@@ -51,16 +51,16 @@ export class RetrieveNoteHomePage {
 
   ionViewWillEnter() {
     this.isRetrieveNoteNotChecked = true;
-    let loading = this.loadingCtrl.create({
-      content: 'Loading Data. Please wait...'
-    });
+    this.loadingCtrl.create({
+      message: 'Loading Data. Please wait...'
+    }).then(loading => {
+      loading.present();
 
-    loading.present();
-
-    setTimeout(() => {
-      this.loadRetrieveNotes();
-      console.log("Promises RN Loaded!");
-      loading.dismiss();
+      setTimeout(() => {
+        this.loadRetrieveNotes();
+        console.log("Promises RN Loaded!");
+        loading.dismiss();
+      });
     });
 
   }
@@ -148,7 +148,7 @@ export class RetrieveNoteHomePage {
   }
 
   goToCreateRetrieveNote() {
-    this.navCtrl.push("RetrieveNoteCreatePage");
+    this.navCtrl.navigateForward('/retrieve-note-create');
   }
 
   isChecked(retrieveNote) {
@@ -156,7 +156,7 @@ export class RetrieveNoteHomePage {
   }
 
   onRetrieveNoteClick(retrieveNote) {
-    this.navCtrl.push("RetrieveNoteMgmtPage", {retrieveNote: retrieveNote});
+    this.navCtrl.navigateForward('/retrieve-note-mgmt', { state: { retrieveNote: retrieveNote } });
   }
 
   openActionPanel(checkbox, retrieveNote) {
@@ -177,24 +177,31 @@ export class RetrieveNoteHomePage {
   }
 
   openRetrieveNoteContextMenu(event) {
-    let popover = this.popOverCtrl.create(RetrieveNoteContextMenuHomeComponent, {
-      'retrieveNote': this.checkedRetrieveNote,
-    }, {cssClass: 'custom-customer-popover'});
-
-    popover.present({
-      ev: event
-    });
-    popover.onDidDismiss(data => {
+    this.popOverCtrl.create({
+      component: RetrieveNoteContextMenuHomeComponent,
+      componentProps: {
+        'retrieveNote': this.checkedRetrieveNote,
+      },
+      cssClass: 'custom-customer-popover',
+      event: event
+    }).then(popover => {
+      popover.present();
+      return popover.onDidDismiss();
+    }).then(result => {
       this.loadRetrieveNotes();
     });
   }
 
   goToRetrieveNoteSummaryReportModal() {
-    let summaryReportModal = this.modalCtrl.create(RetrieveNoteModalSummaryReportComponent,{},{cssClass:this.selectedTheme+" update-profile-modal-retrieve-note-summary"});
-    summaryReportModal.onDidDismiss(data => {
-      console.log(data);
+    this.modalCtrl.create({
+      component: RetrieveNoteModalSummaryReportComponent,
+      cssClass: this.selectedTheme + " update-profile-modal-retrieve-note-summary"
+    }).then(modal => {
+      modal.present();
+      return modal.onDidDismiss();
+    }).then(result => {
+      console.log(result.data);
     });
-    summaryReportModal.present();
   }
 
 }

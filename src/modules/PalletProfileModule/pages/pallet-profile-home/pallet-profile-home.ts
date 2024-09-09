@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams, Platform, PopoverController} from '@ionic/angular';
+import {AlertController, NavController, NavParams, Platform, PopoverController} from '@ionic/angular';
 import {PalletProfileProvider} from "../../providers/pallet-profile/pallet-profile";
 import {PalletProfileMgmtPage} from "../pallet-profile-mgmt/pallet-profile-mgmt";
 import {PalletProfileContextMenuHomeComponent} from "../../components/pallet-profile-context-menu-home/pallet-profile-context-menu-home";
@@ -13,7 +13,7 @@ import {SettingsProvider} from "../../../../providers/settings/settings";
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-pallet-profile-home',
   templateUrl: 'pallet-profile-home.html',
@@ -64,7 +64,7 @@ export class PalletProfileHomePage {
   }
 
   createPalletProfile() {
-    this.navCtrl.push("PalletProfileCreatePage");
+    this.navCtrl.navigateForward('/pallet-profile-create');
   }
 
   loadSearchOrderArrangeData(event?) {
@@ -90,7 +90,7 @@ export class PalletProfileHomePage {
   }
 
   onPalletProfileClick(palletProfile) {
-    this.navCtrl.push("PalletProfileMgmtPage", {palletProfile: palletProfile});
+    this.navCtrl.navigateForward('/pallet-profile-mgmt', { state: { palletProfile: palletProfile } });
   }
 
   openActionPanel(checkbox, palletProfile) {
@@ -111,13 +111,17 @@ export class PalletProfileHomePage {
   }
 
   openPalletProfileContextMenu(event) {
-    let popover = this.popOverCtrl.create(PalletProfileContextMenuHomeComponent,{'palletProfile': this.checkedPalletProfile}, {cssClass:this.selectedTheme+' custom-customer-popover'});
-    popover.onDidDismiss(data => {
+    this.popOverCtrl.create({
+      component: PalletProfileContextMenuHomeComponent,
+      componentProps: {'palletProfile': this.checkedPalletProfile},
+      cssClass: this.selectedTheme + ' custom-customer-popover',
+      event: event
+    }).then(popover => {
+      popover.present();
+      return popover.onDidDismiss();
+    }).then(result => {
       this.loadSearchOrderArrangeData();
-      this.isPalletProfileNotChecked=true;
-    });
-    popover.present({
-      ev: event
+      this.isPalletProfileNotChecked = true;
     });
   }
 

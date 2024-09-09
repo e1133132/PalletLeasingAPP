@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {NavParams, Platform, ViewController} from "@ionic/angular";
+import {NavParams, Platform} from "@ionic/angular";
+import { ModalController } from "@ionic/angular";
 import {RetrieveNoteProvider} from "../../providers/retrieve-note/retrieve-note";
 import {ApiURL} from "../../../../shared/ApiURL";
 
@@ -22,7 +23,7 @@ export class RetrieveNoteModalSummaryReportComponent {
   endDate = new Date().toISOString();
 
   constructor(public navParams: NavParams,
-              public viewCtrl: ViewController,
+              private modalCtrl: ModalController,
               public platform: Platform,
               private retrieveNoteProvider: RetrieveNoteProvider,
               private api:ApiURL) {
@@ -58,7 +59,7 @@ export class RetrieveNoteModalSummaryReportComponent {
   }
 
   close() {
-    this.viewCtrl.dismiss();
+    this.modalCtrl.dismiss();
   }
 
 }
